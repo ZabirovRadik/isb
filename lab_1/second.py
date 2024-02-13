@@ -1,12 +1,28 @@
 """Module providing a function printing python version 3.11.5."""
-import csv
 import os
 import argparse
+import logging
 import pandas as pd
 
-def count_occurrences(encoded_text: str, info: str) -> pd.DataFrame:
+
+logging.basicConfig(level=logging.DEBUG)
+
+
+def count_occurrences(
+        encrypted_text: str,
+        file_for_info: str) -> pd.DataFrame:
+    """
+    Creating a file with information about unique text characters
+
+    parameters
+    ---------
+    encrypted_text : str
+        Encrypted text
+    file_for_info : str
+        The path for the information file
+    """
     df = pd.DataFrame(columns=["symbols","counting", "in_relation_to"])
-    with open(encoded_text, encoding="utf-8") as t:
+    with open(encrypted_text, encoding="utf-8") as t:
         text = t.read()
         symbols = set(text)
         index = 0
@@ -17,54 +33,40 @@ def count_occurrences(encoded_text: str, info: str) -> pd.DataFrame:
                              "in_relation_to": count / len(text)}
             index += 1
     df = df.sort_values(by="counting", ascending=False)
+    df.to_csv(file_for_info)
+    logging.info(f"A file {file_for_info} has been created")
     return df
 
-def replace_letters(encoded_text:str,
-                       alphabet_in_text: str,
-                       right_alphabet: str,
-                       file_to_save: str) -> str:
-    with open(encoded_text, encoding="utf-8") as t:
+
+def replace_letters(
+        encrypted_text: str,
+        alphabet_in_text: str,
+        right_alphabet: str,
+        file_to_decrypted_text: str) -> str:
+    """
+    Replacing encrypted text characters with the correct ones
+
+    parameters
+    ---------
+    encrypted_text : str
+        The text that needs to be deciphered
+    alphabet_in_text: str
+        A set of unique characters in the encrypted text
+    right_alphabet: str
+        Russian letters + space are in order to match the order with "alphabet_in_text" to replace
+    file_to_decrypted_text : str
+        The path for the decrypted text
+    """
+    with open(encrypted_text, encoding="utf-8") as t:
         text = t.read()
     i = 0
     for right_char in right_alphabet:
         text = text.replace(alphabet_in_text[i], right_char)
         i += 1
-    text.replace("  ", "-")
-    # text = text.replace(" ", "ы")
-    # text = text.replace(df.iloc[0]["symbols"], " ")
-    # text = text.replace("\n", "ы")
-    # text = text.replace("У", "и")
-    # text = text.replace("1", "л")
-    # text = text.replace("Р", "д")
-    # text = text.replace("4", "а")
-    # text = text.replace("Д", "н")
-    # text = text.replace(">", "е")
-    # text = text.replace("О", "в")
-    # text = text.replace("Е", "о")
-    # text = text.replace("<", "ч")
-    # text = text.replace("И", "с")
-    # text = text.replace("П", "г")
-    # text = text.replace("Ъ", "ц")
-    # text = text.replace("Ш", "ф")
-    # text = text.replace("t", "р")
-    # text = text.replace("Ф", "й")
-    # text = text.replace("r", "п")
-    # text = text.replace("Й", "т")
-    # text = text.replace("8", "з")
-    # text = text.replace("2", "м")
-    # text = text.replace("А", "ь")
-    # text = text.replace("Х", "к")
-    # text = text.replace("7", "ж")
-    # text = text.replace("Ч", "у")
-    # text = text.replace("Л", "я")
-    # text = text.replace("К", "ю")
-    # text = text.replace("5", "б")
-    # text = text.replace("Ы", "ш")
-    # text = text.replace("Щ", "х")
-    # text = text.replace("Ь", "щ")
-    with open(file_to_save, mode = "w", encoding="utf-8") as t:
+    with open(file_to_decrypted_text, mode = "w", encoding="utf-8") as t:
         t.write(text)
-    return file_to_save
+    logging.info(f"Decrypted text saved by path {file_to_decrypted_text}")
+    return file_to_decrypted_text
 
 
 if __name__ == "__main__":
@@ -72,20 +74,24 @@ if __name__ == "__main__":
                         prog='decryption UTF-8',
                         description='descrypton text'
                         )
-    parser.add_argument('-t', '--encoded_text',
+    parser.add_argument('-t', '--encrypted_text',
                         type = str, default = os.path.join("lab_1","for_second","cod5.txt")
                         )
     parser.add_argument('-i', '--info',
                         type = str, default = os.path.join("lab_1","for_second", "info.csv")
                         )
-    parser.add_argument('-f', '--folder',
-                        type = str, default = os.path.join("lab_1","for_second")
+    parser.add_argument('-f', '--file_to_decrypted_text',
+                        type = str, default = os.path.join("lab_1","for_second", "decrypted_text.txt")
                         )
-    alphabet_in_text = " М\nУ1Р4Д>ОЕ<ИПЪШtФrЙ82АХ7ЧЛК5ЫЩЬ"
-    right_alphabet = "ы ыилданевочсгцфрйптзмькжуяюбшхщ" 
+    parser.add_argument('-a', '--alphabet_in_text',
+                        type = str, default = " М\nУ1Р4Д>ОЕ<ИПЪШtФrЙ82АХ7ЧЛК5ЫЩЬ"
+                        )
+    parser.add_argument('-r', '--right_alphabet',
+                        type = str, default = "ы ыилданевочсгцфрйптзмькжуяюбшхщ"
+                        )
     args = parser.parse_args()
-    #count_occurrences(args.encoded_text, args.info)
-    replace_letters(args.encoded_text,
-                    alphabet_in_text,
-                    right_alphabet,
-                    os.path.join(args.folder, "decoded_text"))
+    count_occurrences(args.encrypted_text, args.info)
+    replace_letters(args.encrypted_text,
+                    args.alphabet_in_text,
+                    args.right_alphabet,
+                    args.file_to_decrypted_text)
