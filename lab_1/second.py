@@ -33,6 +33,7 @@ def count_occurrences(
                              "in_relation_to": count / len(text)}
             index += 1
     df = df.sort_values(by="counting", ascending=False)
+    df.index = range(len(df))
     df.to_csv(file_for_info)
     logging.info(f"A file {file_for_info} has been created")
     return df

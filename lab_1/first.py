@@ -2,9 +2,23 @@
 import argparse
 import os
 import logging
+from enum import Enum
 
 
 logging.basicConfig(level=logging.DEBUG)
+
+
+class Mode(Enum):
+    """
+    Attributes
+    ----------
+    encrypt: int
+        So you need to encrypt the text
+    decrypt: int
+        So you need to decrypt the text
+    """
+    ENCRYPT = 0
+    DECRYPT = 1
 
 
 def simple_cipher(
@@ -28,7 +42,7 @@ def simple_cipher(
     key: str,
         The key for encryption or decryption
     mode: int
-        Switch: 0-encrypt, 1-decrypt
+        Switch: Mode.ENCRYPT.value or Mode.DECRYPT.value
     """
     with open(key, encoding="utf-8") as k:
         key = k.read()
@@ -64,8 +78,8 @@ if __name__ == "__main__":
                         help = 'The path to the key'
                         )
     parser.add_argument('-m', '--mode',
-                        type = int, default = 0,
-                        help = '0-encrypt, 1-decrypt'
+                        type = int, default = Mode.ENCRYPT.value,
+                        help = 'What do you want: to encrypt or decrypt'
                         )
     parser.add_argument('-f', '--from_where',
                         type = str, default = os.path.join("lab_1", "for_first", "planned_text.txt")
