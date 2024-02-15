@@ -1,8 +1,10 @@
 """Module providing a function printing python version 3.11.5."""
 import argparse
-import os
-import logging
+
 from enum import Enum
+
+import logging
+import os
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -47,12 +49,13 @@ def simple_cipher(
     try:
         with open(key, encoding="utf-8") as k:
             key = k.read()
-        if mode == Mode.ENCRYPT:
-            dictionary = dict(zip(RUSSIAN_ALPHABET, key))
-        elif mode == Mode.DECRYPT:
-            dictionary = dict(zip(key, RUSSIAN_ALPHABET))
-        else:
-            logging.exception("Incorrect mode!")
+        match mode:
+            case Mode.ENCRYPT:
+                dictionary = dict(zip(RUSSIAN_ALPHABET, key))
+            case Mode.DECRYPT:
+                dictionary = dict(zip(key, RUSSIAN_ALPHABET))
+            case _:
+                logging.exception("Incorrect mode!")
         answer = ""
         with open(from_where, encoding="utf-8") as text:
             for letter in text.read():

@@ -1,7 +1,8 @@
 """Module providing a function printing python version 3.11.5."""
-import os
 import argparse
 import logging
+import os
+
 import pandas as pd
 
 
