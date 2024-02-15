@@ -21,20 +21,25 @@ def count_occurrences(
     file_for_info : str
         The path for the information file
     """
-    df = pd.DataFrame(columns=["symbols","counting", "in_relation_to"])
-    with open(encrypted_text, encoding="utf-8") as t:
-        text = t.read()
-        symbols = set(text)
-        index = 0
-        for symbol in symbols:
-            count = text.count(symbol)
-            df.loc[index] = {'symbols': symbol,
-                             "counting": count,
-                             "in_relation_to": count / len(text)}
-            index += 1
+    try:
+        with open(encrypted_text, encoding="utf-8") as t:
+            text = t.read()
+    except Exception as e:
+        logging.exception(e)
+    symbols = list(set(text))
+    list_of_count = []
+    list_of_relations = []
+    for symbol in symbols:
+        count = text.count(symbol)
+        list_of_count.append(count)
+        list_of_relations.append(count / len(text))
+    df = pd.DataFrame({"symbols": symbols,
+                        "counting": list_of_count,
+                        "in_relation_to": list_of_relations})
     df = df.sort_values(by="counting", ascending=False)
     df.index = range(len(df))
     df.to_csv(file_for_info)
+    print(df)
     logging.info(f"A file {file_for_info} has been created")
     return df
 
@@ -58,14 +63,15 @@ def replace_letters(
     file_to_decrypted_text : str
         The path for the decrypted text
     """
-    with open(encrypted_text, encoding="utf-8") as t:
-        text = t.read()
-    i = 0
-    for right_char in right_alphabet:
-        text = text.replace(alphabet_in_text[i], right_char)
-        i += 1
-    with open(file_to_decrypted_text, mode = "w", encoding="utf-8") as t:
-        t.write(text)
+    try:
+        with open(encrypted_text, encoding="utf-8") as t:
+            text = t.read()
+        for wrong_char, right_char in zip(alphabet_in_text, right_alphabet):
+            text = text.replace(wrong_char, right_char)
+        with open(file_to_decrypted_text, mode = "w", encoding="utf-8") as t:
+            t.write(text)
+    except Exception as e:
+        logging.exception(e)
     logging.info(f"Decrypted text saved by path {file_to_decrypted_text}")
     return file_to_decrypted_text
 
