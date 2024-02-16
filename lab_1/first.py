@@ -1,8 +1,6 @@
 """Module providing a function printing python version 3.11.5."""
 import argparse
-
 from enum import Enum
-
 import logging
 import os
 
