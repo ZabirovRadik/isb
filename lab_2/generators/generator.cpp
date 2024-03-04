@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
 
-#define MAX_SIZE 50
+#define MAX_SIZE 128
 
 /**
  * @brief The built-in c++ generator is used to generate a number of random bits
@@ -15,6 +16,7 @@ void generate_random_bits() {
 }
 
 int main() {
-    srand(MAX_SIZE);
+    srand(time(NULL));
+    generate_random_bits();
     return 0;
 }

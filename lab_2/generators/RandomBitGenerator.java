@@ -5,7 +5,7 @@ import java.util.Random;
  */
 public class RandomBitGenerator {
 
-    private static final int MAXSIZE = 50;
+    private static final int MAXSIZE = 128;
 
     /**
      * Generates and displays a set of pseudorandom bits of a given length
