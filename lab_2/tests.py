@@ -1,13 +1,13 @@
+"""Module providing a function printing python version 3.11.8"""
 import json
 import logging
 import math
-from mpmath import gammainc
 import numpy as np
 import os
 
+from mpmath import gammainc
 
 logging.basicConfig(level=logging.DEBUG)
-
 
 pi = [0.2148, 0.3672, 0.2305, 0.1875]
 
