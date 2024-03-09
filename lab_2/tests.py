@@ -38,6 +38,8 @@ def frequency_bitwise_test(bits: str) -> float:
         p_value = math.erfc(abs(sum_values) / np.sqrt(2 * len(bits)))
     except ZeroDivisionError as error:
         logging.error("Division by zero!")
+    except Exception as error:
+        logging.error(error)
     return p_value
 
 
@@ -100,12 +102,15 @@ def longest_run_ones_test(bits: str) -> float:
                 counter += 1
             else:
                 max_counter = max(max_counter, counter)
-        if max_counter <= 1:
-            statistics_on_lengths[0] += 1
-        elif max_counter >= 4:
-            statistics_on_lengths[3] += 1
-        else:
-            statistics_on_lengths[max_counter - 1] += 1
+        match max_counter:
+            case 0, 1:
+                statistics_on_lengths[0] += 1
+            case 2:
+                statistics_on_lengths[1] += 1
+            case 3:
+                statistics_on_lengths[2] += 1
+            case _:
+                statistics_on_lengths[3] += 1
     distribution_of_squares_k = 0
     for i in range(4):
         distribution_of_squares_k += (pow(statistics_on_lengths[i] - 16 * pi[i], 2) /
@@ -116,24 +121,30 @@ def longest_run_ones_test(bits: str) -> float:
 
 if __name__ == "__main__":
     try:
-        with open(os.path.join("lab_2", "json", "rows_of-random_bits.json"), "r") as f:
+        with open(os.path.join("lab_2", "json", "rows_of-random_bits.json"),
+                  mode = "r",
+                  encoding = "utf-8") as f:
             file = json.load(f)
+        row_c = file["c++"]
+        with open(os.path.join(file["folder"],
+                               file["results"]),
+                               mode = "w",
+                               encoding = "utf-8") as f_for_results:
+            f_for_results.write("Results for c++ generator:\n")
+            f_for_results.write(
+                f"\tfrequency bitwise test p-value: {frequency_bitwise_test(row_c)}\n")
+            f_for_results.write(
+                f"\ttest for the same consecutive bits p-value: {test_for_the_same_consecutive_bits(row_c)}\n")
+            f_for_results.write(
+                f"\tLongest run of ones test p-value: {longest_run_ones_test(row_c)}\n")
+
+            row_java = file["java"]
+            f_for_results.write("Results for java generator:\n")
+            f_for_results.write(
+                f"\tfrequency bitwise test p-value: {frequency_bitwise_test(row_java)}\n")
+            f_for_results.write(
+                f"\ttest for the same consecutive bits p-value: {test_for_the_same_consecutive_bits(row_java)}\n")
+            f_for_results.write(
+                f"\tLongest run of ones test p-value: {longest_run_ones_test(row_java)}")
     except Exception as error:
         logging.error(Exception)
-    row_c = file["c++"]
-    print("Results for c++ generator:")
-    print(
-        f"\tfrequency bitwise test p-value: {frequency_bitwise_test(row_c)}")
-    print(
-        f"\ttest for the same consecutive bits p-value: {test_for_the_same_consecutive_bits(row_c)}")
-    print(
-        f"\tLongest run of ones test p-value: {longest_run_ones_test(row_c)}\n")
-
-    row_java = file["java"]
-    print("Results for java generator:")
-    print(
-        f"\tfrequency bitwise test p-value: {frequency_bitwise_test(row_java)}")
-    print(
-        f"\ttest for the same consecutive bits p-value: {test_for_the_same_consecutive_bits(row_java)}")
-    print(
-        f"\tLongest run of ones test p-value: {longest_run_ones_test(row_java)}\n\n")
