@@ -1,8 +1,8 @@
 Results for c++ generator:
 	frequency bitwise test p-value: 0.28884436634648486
 	test for the same consecutive bits p-value: 0.41581953246404235
-	Longest run of ones test p-value: 0.859217404149737
+	Longest run of ones test p-value: 0.843558810525416
 Results for java generator:
 	frequency bitwise test p-value: 0.37675911781158206
 	test for the same consecutive bits p-value: 0.41231077464577437
-	Longest run of ones test p-value: 0.717904352572711
+	Longest run of ones test p-value: 0.844997553382523

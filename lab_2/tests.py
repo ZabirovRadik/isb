@@ -2,9 +2,9 @@
 import json
 import logging
 import math
-import numpy as np
 import os
 
+import numpy as np
 from mpmath import gammainc
 
 logging.basicConfig(level=logging.DEBUG)
@@ -102,8 +102,12 @@ def longest_run_ones_test(bits: str) -> float:
                 counter += 1
             else:
                 max_counter = max(max_counter, counter)
+                counter = 0
+        max_counter = max(max_counter, counter)
         match max_counter:
-            case 0, 1:
+            case 0:
+                statistics_on_lengths[0] += 1
+            case 1:
                 statistics_on_lengths[0] += 1
             case 2:
                 statistics_on_lengths[1] += 1
