@@ -3,8 +3,8 @@ import json
 import logging
 import math
 import os
-
 import numpy as np
+
 from mpmath import gammainc
 
 logging.basicConfig(level=logging.DEBUG)
@@ -118,7 +118,7 @@ def longest_run_ones_test(bits: str) -> float:
     distribution_of_squares_k = 0
     for i in range(4):
         distribution_of_squares_k += (pow(statistics_on_lengths[i] - 16 * pi[i], 2) /
-                                      16 * pi[i])
+                                      (16 * pi[i]))
     p_value = gammainc(3 / 2, distribution_of_squares_k / 2)
     return p_value
 
