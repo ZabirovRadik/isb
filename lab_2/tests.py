@@ -94,7 +94,7 @@ def longest_run_ones_test(bits: str) -> float:
     """
     length = len(bits)
     statistics_on_lengths = {0: 0, 1: 0, 2: 0, 3: 0}
-    for i in range(0, length - 8, 8):
+    for i in range(0, length, 8):
         counter = 0
         max_counter = 0
         for bit in bits[i: i + 8]:
