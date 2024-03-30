@@ -1,0 +1,10 @@
+{
+    "main_folder":"lab_3",
+    "files":"files",
+    "initial_file":"inital.txt",
+    "encrypted_file":"encrypted_file.txt",
+    "decrypted_file":"decrypted_file.txt",
+    "symmetric_key":"symmetric.txt",
+    "public_key":"public.pem",
+    "secret_key":"secret.pem"
+}
