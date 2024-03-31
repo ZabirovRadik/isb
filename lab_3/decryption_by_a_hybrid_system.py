@@ -13,20 +13,20 @@ from generate_keys import decrypt_with_asymmetric_method
 logging.basicConfig(level=logging.DEBUG)
 
 
-def encript_by_hybrid(plain_text: str,
+def decript_by_hybrid(encrypted_text: str,
                       secret_key: rsa.RSAPublicKey,
                       path_key_of_symmetric: str,
                       path_to_save: str
                       )->bytes:
     """
     ## Description:
-    This function encrypts the given plaintext using a hybrid encryption approach with RSA and CAST5 cipher algorithms.
+    Function to decrypt text using a hybrid method
 
     ## Arguments:
-    - plain_text (str): A string containing the plaintext to be encrypted.
-    - secret_key (rsa.RSAPublicKey): An RSAPublicKey object representing the path to the RSA public key used for encryption.
+    - encrypted_text (str): A string containing the plaintext to be encrypted.
+    - secret_key (rsa.RSAPublicKey): An RSAPublicKey object representing the path to the RSA public key used for decryption.
     - path_key_of_symmetric (str): A string representing the path to the symmetric key file used for encryption.
-    - path_to_save (str): A string representing the path to save the encrypted text.
+    - path_to_save (str): A string representing the path to save the decrypted text.
 
     ## Returns:
     - A bytes object representing the encrypted text.
@@ -34,17 +34,17 @@ def encript_by_hybrid(plain_text: str,
     private_bytes = read(secret_key)
     d_private_key = load_pem_private_key(private_bytes, password= None)
     encrypted_key = read(path_key_of_symmetric)
-    text = read(plain_text)
+    text = read(encrypted_text)
     iv = os.urandom(8)
     try:
         key = decrypt_with_asymmetric_method(d_private_key,
                                             encrypted_key)
         cipher = Cipher(algorithms.CAST5(key), modes.CBC(iv))
-        encryptor = cipher.encryptor()
-        padder = padding.ANSIX923(len(key)*8).padder()
-        padded_text = padder.update(text) + padder.finalize()
-        c_text = encryptor.update(padded_text) + encryptor.finalize()
+        decryptor = cipher.decryptor()
+        dc_text = decryptor.update(text) + decryptor.finalize()
+        unpadder =  padding.ANSIX923(len(key)*8).unpadder()
+        unpadded_dc_text = unpadder.update(dc_text) + unpadder.finalize()
     except Exception as e:
          logging.exception(e)
-    write(path_to_save, c_text)
-    return c_text
+    write(path_to_save, unpadded_dc_text)
+    return unpadded_dc_text
