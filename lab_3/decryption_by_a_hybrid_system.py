@@ -35,14 +35,15 @@ def decript_by_hybrid(encrypted_text: str,
     d_private_key = load_pem_private_key(private_bytes, password= None)
     encrypted_key = read(path_key_of_symmetric)
     text = read(encrypted_text)
-    iv = os.urandom(8)
+    iv = text[:8]
+    text = text[8:]
     try:
         key = decrypt_with_asymmetric_method(d_private_key,
                                             encrypted_key)
         cipher = Cipher(algorithms.CAST5(key), modes.CBC(iv))
         decryptor = cipher.decryptor()
+        unpadder =  padding.ANSIX923(len(key) * 8).unpadder()
         dc_text = decryptor.update(text) + decryptor.finalize()
-        unpadder =  padding.ANSIX923(len(key)*8).unpadder()
         unpadded_dc_text = unpadder.update(dc_text) + unpadder.finalize()
     except Exception as e:
          logging.exception(e)

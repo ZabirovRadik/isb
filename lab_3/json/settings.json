@@ -2,6 +2,7 @@
     "main_folder":"lab_3",
     "key_size": 128,
     "files":"files",
+    "keys":"keys",
     "initial_file":"inital.txt",
     "encrypted_file":"encrypted_file.txt",
     "decrypted_file":"decrypted_file.txt",

@@ -1,9 +1,7 @@
 """Module providing a function printing python version 3.11.8"""
 import os
-import json
 import logging
 
-from cryptography.hazmat.primitives.ciphers.algorithms import CAST5
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes, serialization
 
@@ -13,11 +11,33 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def  encrypt_with_asymmetric_method(public_key: rsa.RSAPublicKey, text: bytes)-> bytes:
+    """
+    ## Description:
+    Encrypts the given text using asymmetric encryption with the provided public key.
+
+    ## Arguments:
+    - public_key (rsa.RSAPublicKey): The RSA public key used for encryption.
+    - text (bytes): The plaintext bytes to be encrypted.
+
+    ## Returns:
+    - bytes: The encrypted ciphertext.
+    """
     return public_key.encrypt(text, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                                                           algorithm=hashes.SHA256(), label=None))
 
 
 def  decrypt_with_asymmetric_method(secret_key: rsa.RSAPublicKey, text: bytes)-> bytes:
+    """
+    ## Description:
+    Decrypts the given ciphertext using asymmetric decryption with the provided private key.
+
+    ## Arguments:
+    - secret_key (rsa.RSAPrivateKey): The RSA private key used for decryption.
+    - text (bytes): The ciphertext bytes to be decrypted.
+
+    ## Returns:
+    - bytes: The decrypted plaintext.
+    """
     return secret_key.decrypt(text, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                                                           algorithm=hashes.SHA256(), label=None))
 
@@ -40,7 +60,7 @@ def generate_and_save_keys(k_size: int,
     ## Returns:
     - None
     """
-    if((k_size < 40 | k_size > 128) & k_size % 8 != 0):
+    if (k_size < 40 | k_size > 128) & k_size % 8 != 0:
         logging.exception("Uncorrect key's size")
     symmetric_key = os.urandom(k_size // 8)
     private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)

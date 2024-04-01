@@ -43,8 +43,8 @@ def encript_by_hybrid(plain_text: str,
         encryptor = cipher.encryptor()
         padder = padding.ANSIX923(len(key)*8).padder()
         padded_text = padder.update(text) + padder.finalize()
-        c_text = encryptor.update(padded_text) + encryptor.finalize()
+        c_text = iv + encryptor.update(padded_text) + encryptor.finalize()
     except Exception as e:
-         logging.exception(e)
+        logging.exception(e)
     write(path_to_save, c_text)
     return c_text

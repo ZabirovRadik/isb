@@ -23,7 +23,6 @@ def write(path: str, text: bytes)->None:
         logging.exception(e)
 
 
-
 def read(path: str)->bytes:
     """
     ## Description:
