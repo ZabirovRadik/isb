@@ -4,7 +4,7 @@ import logging
 from enum import Enum
 
 from cryptography.hazmat.primitives import serialization, asymmetric, hashes
-from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.hazmat.primitives.serialization import load_pem_private_key, load_pem_public_key
 
 from assymetric_cryptography import decrypt_with_asymmetric_method
 
@@ -84,7 +84,7 @@ def serialisation_public_key(path: str, key)->None:
 def serialisation_secret_key(path: str, key)->None:
     """
     ## Description:
-    Serialize an cecret key to a PEM file.
+    Serialize an secret key to a PEM file.
 
     ## Arguments:
     - path: str, path where the key should be stored.
@@ -98,13 +98,13 @@ def serialisation_secret_key(path: str, key)->None:
                                   encryption_algorithm=serialization.NoEncryption()))
 
 
-def deserialisation_secret_key(path: str):
+def deserialisation_secret_key(path: str)->asymmetric.rsa.RSAPrivateKey:
     """
     ## Description:
     Deserialize a secret key from a PEM file.
 
     ## Arguments:
-    - path: str, path to the secret key.
+    - path: str, path of the secret key.
 
     ## Returns:
     - secret key object
@@ -112,7 +112,23 @@ def deserialisation_secret_key(path: str):
     return load_pem_private_key(read(path), password=None)
 
 
-def encrypt_and_serialisation_symmetryc_key(path: str, symmetric_key: bytes, public_key)->None:
+def deserialisation_public_key(path: str)->asymmetric.rsa.RSAPublicKey:
+    """
+    ## Description:
+    Deserialize a public key from a PEM file.
+
+    ## Arguments:
+    - path: str, path of the public key.
+
+    ## Returns:
+    - public key object
+    """
+    return load_pem_public_key(read(path))
+
+
+def encrypt_and_serialisation_symmetryc_key(path: str,
+                                            symmetric_key: bytes,
+                                            public_key: asymmetric.rsa.RSAPublicKey)->None:
     """
     ## Description:
     Encrypt a symmetric key with a public key and serialize to a file.
@@ -135,7 +151,9 @@ def encrypt_and_serialisation_symmetryc_key(path: str, symmetric_key: bytes, pub
          )
 
 
-def decrypt_and_deserialisation_symmetryc_key(path_secret_key: str, path_symmetric_key: bytes):
+def decrypt_and_deserialisation_symmetryc_key(path_secret_key: str,
+                                              path_symmetric_key: bytes
+                                              )->bytes:
     """
     Decrypt and deserialize a symmetric key using a secret key.
 
