@@ -77,43 +77,65 @@ class MainWindow(QMainWindow):
         self.show()
 
     def iins_button_update_clicked(self):
+        """
+        Changes the value self.iins
+        """
         new_value, ok = QInputDialog.getText(self, "Update iins", "Enter iins(delimetr is ' '):")
         if ok:
             self.iins = new_value.split()
             self.label_iins.setText(f'IINs: {", ".join(str(i) for i in self.iins)}')
     
     def last_numbers_button_update_clicked(self):
+        """
+        Changes the value self.last_numbers
+        """
         new_value, ok = QInputDialog.getText(self, "Update last numbers", "Enter new last numbers:")
         if ok:
             self.last_numbers = new_value
             self.label_last_numbers.setText(f'Last numbers: {self.last_numbers}')
     
     def hash_button_update_clicked(self):
+        """
+        Changes the value self.card_hash
+        """
         new_value, ok = QInputDialog.getText(self, "Update hash", "Enter new hash:")
         if ok:
             self.card_hash = new_value
             self.label_hash.setText(f'Hash: {self.card_hash}')
 
     def card_number_button_update_clicked(self):
+        """
+        Changes the value self.card_number
+        """
         new_value, ok = QInputDialog.getText(self, "Update card number", "Enter new card number:")
         if ok:
             self.card_number = new_value
             self.label_card_number.setText(f'Card Number: {self.card_number}')
 
     def path_card_number_update(self):
+        """
+        Changes the value self.path_card_number
+        """
         new_value, ok = QInputDialog.getText(self, "Update path card number", "Enter new path card number:")
         if ok:
             self.path_card_number = new_value
             self.label_path_card_number.setText(f'Path card number: {self.path_card_number}')
 
     def select_card_number(self):
+        """
+        Using function card_selection to select the card number
+        """
         message = QMessageBox()
         message.setWindowTitle("Result")
         self.card_number = card_selection(self.iins, self.last_numbers, self.card_hash, self.path_card_number)
+        self.label_card_number.setText(f'Path card number: {self.card_number}')
         message.setText(f"Card Number changed successfully!\n{self.card_number}")
         message.exec_()
 
     def check_luhn_algorithm(self):
+        """
+        Using function luhn to check correctness card number
+        """
         message = QMessageBox()
         message.setWindowTitle("Результат")
         if algorithm_luhn(self.card_number):
@@ -123,6 +145,9 @@ class MainWindow(QMainWindow):
         message.exec_()
 
     def find_collisions(self):
+        """
+        find collisions by func find_collisions
+        """
         message = QMessageBox()
         message.setWindowTitle("Result")
         find_collisions(self.card_hash, self.iins[1], self.last_numbers)

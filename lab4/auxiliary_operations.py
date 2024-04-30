@@ -21,6 +21,9 @@ def serialisation_card_num(path: str, num: str)-> None:
 
 
 def open_json(path: str):
+    """
+    Just open json file
+    """
     try:
         with open(path,
                     mode = "r",
