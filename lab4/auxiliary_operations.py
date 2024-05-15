@@ -1,6 +1,7 @@
-from enum import Enum
 import json
 import logging
+
+from enum import Enum
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -26,8 +27,8 @@ def open_json(path: str):
     """
     try:
         with open(path,
-                    mode = "r",
-                    encoding = "utf-8") as f:
+                  mode = "r",
+                  encoding = "utf-8") as f:
                 return json.load(f)
     except Exception as e:
          logging.exception(e)

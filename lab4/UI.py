@@ -1,3 +1,5 @@
+import argparse
+import os
 import sys
 from PyQt5.QtWidgets import QApplication, \
     QMainWindow, QLabel, QPushButton,\
@@ -5,16 +7,17 @@ from PyQt5.QtWidgets import QApplication, \
             QWidget, QMessageBox
 
 from tasks_funcs import card_selection, algorithm_luhn, find_collisions
+from auxiliary_operations import open_json
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, json_file: str, start_card_num: str):
         super().__init__()
-
-        self.iins = [510126, 555921, 519747]
-        self.last_numbers = "0254"
-        self.card_hash = '4006234246b4fd2b2833d740927ab20465afad862c74b1a88ec0869bde5c836c'
-        self.card_number = '5559210557390254'
-        self.path_card_number = 'lab4//json//card_number.json'
+        file = open_json(json_file)
+        self.iins = file["iins"]
+        self.last_numbers = file["last_numbers"]
+        self.card_hash = file["hash"]
+        self.card_number = start_card_num
+        self.path_card_number = file["path_to_card"]
         
         grid_layout = QGridLayout()
 
@@ -156,6 +159,18 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-j',
+                       '--json_file_path',
+                       type= str,
+                       default= os.path.join("lab4", "json", "settings.json"),
+                       help= 'Путь к файлу json для начальных настроек')
+    parser.add_argument('-c',
+                       '--any_card_number',
+                       type= str,
+                       default= "5559210557390254",
+                       help= 'Начальный номер карты')
+    args = parser.parse_args()
     app = QApplication(sys.argv)
-    windowExample = MainWindow()
+    windowExample = MainWindow(args.json_file_path, args.any_card_number)
     sys.exit(app.exec_())
